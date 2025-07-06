@@ -1,3 +1,4 @@
+using Config;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,11 +7,13 @@ public class GameManager : Singleton<GameManager>
     // Состояния игры
     public enum GameState
     {
-        MainMenu,
-        Playing,
-        Paused,
-        GameOver
+        MainMenu = 0,
+        Playing = 1,
+        Paused = 2,
+        GameOver = 3,
     }
+    
+    public Config1 Config;
     
     private GameState currentState = GameState.MainMenu;
     
