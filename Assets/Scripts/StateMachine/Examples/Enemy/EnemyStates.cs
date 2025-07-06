@@ -23,7 +23,7 @@ public class IdleState : IState
         idleTimer += Time.deltaTime;
         
         // Проверяем игрока
-        if (enemy.GetDistanceToPlayer() <= enemy.detectionRange)
+        if (enemy.GetDistanceToPlayer() <= enemy.DetectionRange)
         {
             enemy.ChangeState<ChaseState>();
             return;
@@ -57,16 +57,16 @@ public class PatrolState : IState
     {
         Debug.Log("Вход в состояние Patrol");
         
-        if (enemy.patrolPoints.Length > 0)
+        if (enemy.PatrolPoints.Length > 0)
         {
-            currentTarget = enemy.patrolPoints[enemy.CurrentPatrolIndex];
+            currentTarget = enemy.PatrolPoints[enemy.CurrentPatrolIndex];
         }
     }
     
     public void Execute()
     {
         // Проверяем игрока
-        if (enemy.GetDistanceToPlayer() <= enemy.detectionRange)
+        if (enemy.GetDistanceToPlayer() <= enemy.DetectionRange)
         {
             enemy.ChangeState<ChaseState>();
             return;
@@ -75,13 +75,13 @@ public class PatrolState : IState
         // Патрулирование
         if (currentTarget != null)
         {
-            enemy.MoveTowards(currentTarget.position, enemy.patrolSpeed);
+            enemy.MoveTowards(currentTarget.position, enemy.PatrolSpeed);
             
             // Проверяем достижение точки
             if (Vector3.Distance(enemy.transform.position, currentTarget.position) < 0.5f)
             {
                 // Переходим к следующей точке
-                enemy.CurrentPatrolIndex = (enemy.CurrentPatrolIndex + 1) % enemy.patrolPoints.Length;
+                enemy.CurrentPatrolIndex = (enemy.CurrentPatrolIndex + 1) % enemy.PatrolPoints.Length;
                 enemy.ChangeState<IdleState>();
             }
         }
@@ -113,23 +113,23 @@ public class ChaseState : IState
         float distanceToPlayer = enemy.GetDistanceToPlayer();
         
         // Если игрок слишком далеко - возвращаемся к патрулированию
-        if (distanceToPlayer > enemy.detectionRange * 1.5f)
+        if (distanceToPlayer > enemy.DetectionRange * 1.5f)
         {
             enemy.ChangeState<PatrolState>();
             return;
         }
         
         // Если игрок близко - атакуем
-        if (distanceToPlayer <= enemy.attackRange)
+        if (distanceToPlayer <= enemy.AttackRange)
         {
             enemy.ChangeState<AttackState>();
             return;
         }
         
         // Преследуем игрока
-        if (enemy.player != null)
+        if (enemy.Player != null)
         {
-            enemy.MoveTowards(enemy.player.position, enemy.chaseSpeed);
+            enemy.MoveTowards(enemy.Player.position, enemy.ChaseSpeed);
         }
     }
     
@@ -164,7 +164,7 @@ public class AttackState : IState
         float distanceToPlayer = enemy.GetDistanceToPlayer();
         
         // Если игрок убежал - преследуем
-        if (distanceToPlayer > enemy.attackRange)
+        if (distanceToPlayer > enemy.AttackRange)
         {
             enemy.ChangeState<ChaseState>();
             return;
@@ -178,9 +178,9 @@ public class AttackState : IState
         }
         
         // Поворачиваемся к игроку
-        if (enemy.player != null)
+        if (enemy.Player != null)
         {
-            Vector3 lookDirection = (enemy.player.position - enemy.transform.position).normalized;
+            Vector3 lookDirection = (enemy.Player.position - enemy.transform.position).normalized;
             lookDirection.y = 0;
             if (lookDirection != Vector3.zero)
             {

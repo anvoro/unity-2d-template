@@ -4,27 +4,31 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     [Header("Настройки движения")]
-    public float patrolSpeed = 2f;
-    public float chaseSpeed = 5f;
-    public float detectionRange = 10f;
-    public float attackRange = 2f;
+    [SerializeField] private float patrolSpeed = 2f;
+    [SerializeField] private float chaseSpeed = 5f;
+    [SerializeField] private float detectionRange = 10f;
+    [SerializeField] private float attackRange = 2f;
     
     [Header("Точки патрулирования")]
-    public Transform[] patrolPoints;
+    [SerializeField] private Transform[] patrolPoints;
     
     [Header("Цель")]
-    public Transform player;
+    [SerializeField] private Transform player;
     
     private StateMachine stateMachine;
-    private int currentPatrolIndex = 0;
-    
+
     // Свойства для доступа из состояний
-    public int CurrentPatrolIndex 
-    { 
-        get { return currentPatrolIndex; } 
-        set { currentPatrolIndex = value; }
-    }
-    
+    public int CurrentPatrolIndex { get; set; } = 0;
+
+    public float PatrolSpeed => patrolSpeed;
+    public float ChaseSpeed => chaseSpeed;
+    public float DetectionRange => detectionRange;
+    public float AttackRange => attackRange;
+
+    public Transform[] PatrolPoints => patrolPoints;
+
+    public Transform Player => player;
+
     void Start()
     {
         // Создаем машину состояний
@@ -49,14 +53,14 @@ public class EnemyController : MonoBehaviour
     // Методы для использования в состояниях
     public float GetDistanceToPlayer()
     {
-        if (player == null) return float.MaxValue;
-        return Vector3.Distance(transform.position, player.position);
+        if (Player == null) return float.MaxValue;
+        return Vector3.Distance(transform.position, Player.position);
     }
     
     public void MoveTowards(Vector3 target, float speed)
     {
         Vector3 direction = (target - transform.position).normalized;
-        transform.position += direction * speed * Time.deltaTime;
+        transform.position += direction * (speed * Time.deltaTime);
         
         // Поворот в сторону движения
         if (direction != Vector3.zero)
@@ -76,10 +80,10 @@ public class EnemyController : MonoBehaviour
     {
         // Радиус обнаружения
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        Gizmos.DrawWireSphere(transform.position, DetectionRange);
         
         // Радиус атаки
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, AttackRange);
     }
 }

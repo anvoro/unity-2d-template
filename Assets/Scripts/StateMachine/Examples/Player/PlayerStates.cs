@@ -68,7 +68,7 @@ public class PlayerWalkState : IState
         Vector3 direction = new Vector3(horizontal, 0, vertical).normalized;
         
         // Движение
-        player.Move(direction, player.walkSpeed);
+        player.Move(direction, player.WalkSpeed);
         
         // Проверяем переходы
         if (Input.GetKeyDown(KeyCode.Space) && player.IsGrounded)
@@ -114,7 +114,7 @@ public class PlayerRunState : IState
         Vector3 direction = new Vector3(horizontal, 0, vertical).normalized;
         
         // Движение
-        player.Move(direction, player.runSpeed);
+        player.Move(direction, player.RunSpeed);
         
         // Проверяем переходы
         if (Input.GetKeyDown(KeyCode.Space) && player.IsGrounded)
@@ -165,7 +165,7 @@ public class PlayerJumpState : IState
         Vector3 direction = new Vector3(horizontal, 0, vertical).normalized;
         
         // Уменьшенная скорость в воздухе
-        player.Move(direction, player.walkSpeed * 0.7f);
+        player.Move(direction, player.WalkSpeed * 0.7f);
         
         // Проверяем приземление
         if (player.IsGrounded && jumpTimer > 0.1f)

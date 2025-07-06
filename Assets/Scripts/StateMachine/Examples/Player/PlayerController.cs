@@ -1,12 +1,13 @@
 using UnityEngine;
 
 // Контроллер игрока
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Настройки движения")]
-    public float walkSpeed = 5f;
-    public float runSpeed = 10f;
-    public float jumpForce = 8f;
+    [SerializeField] private float walkSpeed = 5f;
+    [SerializeField] private float runSpeed = 10f;
+    [SerializeField] private float jumpForce = 8f;
     
     private StateMachine stateMachine;
     private Rigidbody rb;
@@ -15,7 +16,11 @@ public class PlayerController : MonoBehaviour
     // Свойства для состояний
     public bool IsGrounded => isGrounded;
     public Rigidbody Rigidbody => rb;
-    
+
+    public float WalkSpeed => walkSpeed;
+    public float RunSpeed => runSpeed;
+    public float JumpForce => jumpForce;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -43,7 +48,7 @@ public class PlayerController : MonoBehaviour
     
     public void Move(Vector3 direction, float speed)
     {
-        Vector3 movement = direction * speed * Time.deltaTime;
+        Vector3 movement = direction * (speed * Time.deltaTime);
         transform.position += movement;
         
         if (direction != Vector3.zero)
@@ -56,7 +61,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded)
         {
-            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+            rb.velocity = new Vector3(rb.velocity.x, JumpForce, rb.velocity.z);
         }
     }
     

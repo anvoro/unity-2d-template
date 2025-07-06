@@ -1,19 +1,17 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
 public class StateMachine
 {
     private IState currentState;
-    private Dictionary<System.Type, IState> states = new Dictionary<System.Type, IState>();
+    private Dictionary<Type, IState> states = new();
     
     // Добавление состояния в машину состояний
     public void AddState(IState state)
     {
-        System.Type stateType = state.GetType();
-        if (!states.ContainsKey(stateType))
-        {
-            states.Add(stateType, state);
-        }
+        Type stateType = state.GetType();
+        states.TryAdd(stateType, state);
     }
     
     // Смена состояния
