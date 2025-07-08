@@ -1,21 +1,21 @@
 using UnityEngine;
 
 // Контроллер игрока
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Настройки движения")]
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
-    [SerializeField] private float jumpForce = 8f;
+    [SerializeField] private float jumpForce = 8000f;
     
     private StateMachine stateMachine;
-    private Rigidbody rb;
+    private Rigidbody2D rb;
     private bool isGrounded = true;
     
     // Свойства для состояний
     public bool IsGrounded => isGrounded;
-    public Rigidbody Rigidbody => rb;
+    public Rigidbody2D Rigidbody => rb;
 
     public float WalkSpeed => walkSpeed;
     public float RunSpeed => runSpeed;
@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody2D>();
         
         // Создаем машину состояний
         stateMachine = new StateMachine();
@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
         stateMachine.Update();
         
         // Проверка земли
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 1.1f);
     }
     
     public void Move(Vector3 direction, float speed)
@@ -51,17 +51,13 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = direction * (speed * Time.deltaTime);
         transform.position += movement;
         
-        if (direction != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
-        }
     }
     
     public void Jump()
     {
         if (isGrounded)
         {
-            rb.velocity = new Vector3(rb.velocity.x, JumpForce, rb.velocity.z);
+            rb.velocity = new Vector2(rb.velocity.x, JumpForce);
         }
     }
     

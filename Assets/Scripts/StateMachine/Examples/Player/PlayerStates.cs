@@ -8,6 +8,14 @@ public class PlayerIdleState : IState
     public PlayerIdleState(PlayerController player)
     {
         this.player = player;
+
+        InputManager.Instance.OnJumpPressed += () =>
+        {
+            if (player.IsGrounded)
+            {
+                player.ChangeState<PlayerJumpState>();
+            }
+        };
     }
     
     public void Enter()
@@ -22,11 +30,7 @@ public class PlayerIdleState : IState
         float vertical = Input.GetAxis("Vertical");
         
         // Проверяем переходы
-        if (Input.GetKeyDown(KeyCode.Space) && player.IsGrounded)
-        {
-            player.ChangeState<PlayerJumpState>();
-        }
-        else if (horizontal != 0 || vertical != 0)
+        if (horizontal != 0 || vertical != 0)
         {
             if (Input.GetKey(KeyCode.LeftShift))
             {
