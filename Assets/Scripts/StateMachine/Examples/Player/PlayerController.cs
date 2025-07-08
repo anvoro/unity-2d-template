@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 // Контроллер игрока
 [RequireComponent(typeof(Rigidbody2D))]
@@ -13,6 +14,23 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private bool isGrounded = true;
     
+    [SerializeField] private Slider slider;
+    private int MaxHealth = 100;
+    private int _currentHealth;
+
+    private int CurrentHealth
+    {
+        get => _currentHealth;
+        set
+        {
+            _currentHealth = value;
+            if (CurrentHealth <= 0)
+            {
+                GameManager.Instance.RestartLevel();
+            }
+        }
+    }
+
     // Свойства для состояний
     public bool IsGrounded => isGrounded;
     public Rigidbody2D Rigidbody => rb;
@@ -23,6 +41,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        _currentHealth = MaxHealth;
         rb = GetComponent<Rigidbody2D>();
         
         // Создаем машину состояний
@@ -44,6 +63,11 @@ public class PlayerController : MonoBehaviour
         
         // Проверка земли
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 1.1f);
+
+        if (slider)
+        {
+            slider.value = (float)CurrentHealth/MaxHealth;
+        }
     }
     
     public void Move(Vector3 direction, float speed)
@@ -58,6 +82,7 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, JumpForce);
+            CurrentHealth -= 20;
         }
     }
     
